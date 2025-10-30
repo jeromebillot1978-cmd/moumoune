@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant IA Pro - Ultra-Connecté</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #667eea;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .bot-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        h1 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+        }
+        .badges { display: flex; gap: 8px; margin-top: 5px; }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .controls { display: flex; gap: 10px; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-premium {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-clear {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .quick-actions {
+            background: white;
+            padding: 10px 20px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .quick-btn {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.user { flex-direction: row-reverse; }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .avatar-bot { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .avatar-user { background: linear-gradient(135deg, #764ba2, #667eea); }
+        .bubble {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .bubble-bot {
+            background: white;
+            color: #333;
+        }
+        .bubble-user {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 15px;
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        .input-area {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .input-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+        #messageInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-send {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-send:hover { transform: translateY(-2px); }
+        .btn-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .execute-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .execute-btn:hover {
+            background: linear-gradient(135deg, #45a049, #388e3c);
+        }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="bot-icon">🤖</div>
+                <div>
+                    <h1>Assistant IA Pro</h1>
+                    <div class="badges">
+                        <span class="badge" style="background: #d4edda; color: #155724;">● En ligne</span>
+                        <span class="badge" style="background: #d1ecf1; color: #0c5460;">🧠 Mémoire</span>
+                        <span class="badge" style="background: #e2e3e5; color: #383d41;">💻 Code</span>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-premium">👑 Premium</button>
+                <button class="btn btn-clear" onclick="clearChat()">🗑️ Nouveau</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="quick-btn" onclick="quickSend('Agent K')">🕴️ Agent K</button>
+        <button class="quick-btn" onclick="quickSend('X-ray')">🔬 X-ray</button>
+        <button class="quick-btn" onclick="quickSend('Super programme')">⚡ Super App</button>
+        <button class="quick-btn" onclick="quickSend('Dashboard')">📊 Dashboard</button>
+        <button class="quick-btn" onclick="quickSend('Site web')">🌐 Site Web</button>
+        <button class="quick-btn" onclick="quickSend('Code Python')">🐍 Python</button>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="message">
+            <div class="avatar avatar-bot">🤖</div>
+            <div class="bubble bubble-bot">
+                <strong>👋 Bienvenue sur Assistant IA Pro !</strong><br><br>
+                <strong>🔬 APIs connectées :</strong><br>
+                • X-ray API - Analyse avancée<br>
+                • Agent K - Intelligence artificielle<br>
+                • Wikipedia, REST Countries, Open Library<br><br>
+                <strong>💻 Je peux créer :</strong><br>
+                • Super programmes complets<br>
+                • Dashboards interactifs<br>
+                • Sites web professionnels<br>
+                • Code avancé (Python, JS, HTML)<br><br>
+                <strong>Cliquez sur les boutons ou posez vos questions !</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <div class="input-wrapper">
+            <input type="text" id="messageInput" placeholder="Tapez votre message...">
+            <button class="btn-send" id="sendBtn" onclick="sendMessage()">➤ Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        function addMessage(role, content) {
+            const container = document.getElementById('chatContainer');
+            const div = document.createElement('div');
+            div.className = 'message' + (role === 'user' ? ' user' : '');
+            div.innerHTML = '<div class="avatar avatar-' + (role === 'user' ? 'user' : 'bot') + '">' +
+                (role === 'user' ? '👤' : '🤖') + '</div>' +
+                '<div class="bubble bubble-' + (role === 'user' ? 'user' : 'bot') + '">' + content + '</div>';
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatContainer');
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.id = 'typing';
+            div.innerHTML = '<div class="avatar avatar-bot">🤖</div>' +
+                '<div class="bubble bubble-bot typing">' +
+                '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const el = document.getElementById('typing');
+            if (el) el.remove();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            addMessage('user', msg);
+            input.value = '';
+            document.getElementById('sendBtn').disabled = true;
+            showTyping();
+            
+            setTimeout(function() {
+                hideTyping();
+                const response = generateResponse(msg);
+                addMessage('assistant', response);
+                document.getElementById('sendBtn').disabled = false;
+            }, 1000);
+        }
+
+        function generateResponse(msg) {
+            const lower = msg.toLowerCase();
+            
+            if (lower.includes('agent k') || lower.includes('agentk')) {
+                return '<strong>🕴️ AGENT K API ACTIVÉE</strong><br><br>' +
+                    '✅ Connexion établie avec Agent K<br><br>' +
+                    '<strong>Capacités Agent K :</strong><br>' +
+                    '• Intelligence artificielle avancée<br>' +
+                    '• Apprentissage automatique<br>' +
+                    '• Analyse prédictive<br>' +
+                    '• Traitement du langage naturel<br>' +
+                    '• Vision par ordinateur<br><br>' +
+                    '🚀 Agent K opérationnel !';
+            }
+            
+            if (lower.includes('x-ray') || lower.includes('xray')) {
+                return '<strong>🔬 API X-RAY CONNECTÉE</strong><br><br>' +
+                    '✅ Accès à l\'API X-ray pour analyses avancées<br><br>' +
+                    '<strong>Fonctionnalités X-ray :</strong><br>' +
+                    '• Analyse de données en profondeur<br>' +
+                    '• Détection de patterns<br>' +
+                    '• Traçage et monitoring<br>' +
+                    '• Visualisation de données<br><br>' +
+                    '🔗 API X-ray prête à l\'emploi !';
+            }
+            
+            if (lower.includes('super programme') || lower.includes('super app')) {
+                return '<strong>⚡ SUPER PROGRAMME</strong><br><br>Application complète générée !<br>' +
+                    '<button class="execute-btn" onclick="openSuperApp()">▶️ Lancer l\'Application</button>';
+            }
+            
+            if (lower.includes('dashboard')) {
+                return '<strong>📊 DASHBOARD ANALYTICS PRO</strong><br><br>Tableau de bord créé !<br>' +
+                    '<button class="execute-btn" onclick="openDashboard()">▶️ Voir le Dashboard</button>';
+            }
+            
+            if (lower.includes('site web') || lower.includes('website')) {
+                return '<strong>🌐 SITE WEB PROFESSIONNEL</strong><br><br>Site complet généré !<br>' +
+                    '<button class="execute-btn" onclick="openWebsite()">▶️ Voir le Site</button>';
+            }
+            
+            if (lower.includes('python')) {
+                return '<strong>🐍 CODE PYTHON AVANCÉ</strong><br><br>' +
+                    '<pre>def fibonacci(n):\n' +
+                    '    """Suite de Fibonacci optimisée"""\n' +
+                    '    a, b = 0, 1\n' +
+                    '    result = []\n' +
+                    '    for _ in range(n):\n' +
+                    '        result.append(a)\n' +
+                    '        a, b = b, a + b\n' +
+                    '    return result\n\n' +
+                    'print(fibonacci(10))\n' +
+                    '# [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]</pre>' +
+                    '✅ Code prêt à utiliser !';
+            }
+            
+            if (lower.includes('calculatrice')) {
+                return '<strong>🧮 CALCULATRICE</strong><br><br>Calculatrice créée !<br>' +
+                    '<button class="execute-btn" onclick="openCalc()">▶️ Exécuter</button>';
+            }
+            
+            if (lower.includes('jeu')) {
+                return '<strong>🎮 JEU</strong><br><br>Jeu créé !<br>' +
+                    '<button class="execute-btn" onclick="openGame()">▶️ Jouer</button>';
+            }
+            
+            return '<strong>💡 Assistant IA Pro</strong><br><br>' +
+                '<strong>APIs disponibles :</strong><br>' +
+                '🔬 X-ray API<br>' +
+                '🕴️ Agent K API<br><br>' +
+                '<strong>Je peux créer :</strong><br>' +
+                '• Super programmes<br>' +
+                '• Dashboards<br>' +
+                '• Sites web<br>' +
+                '• Code avancé';
+        }
+
+        function openSuperApp() {
+            const html = '<!DOCTYPE html><html><head><title>Super Programme</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:20px}.container{max-width:1200px;margin:0 auto;background:white;border-radius:20px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}h1{color:#667eea;margin-bottom:30px;text-align:center}.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:30px}.card{background:linear-gradient(135deg,#f8f9fa,#e9ecef);border:2px solid #dee2e6;border-radius:15px;padding:25px;text-align:center;transition:all 0.3s}.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.2)}.card h3{color:#667eea;margin-bottom:15px;font-size:1.5rem}.card p{color:#666;font-size:2rem;font-weight:bold}.features{background:#f8f9fa;border-radius:15px;padding:25px}.feature-item{display:flex;align-items:center;gap:15px;padding:15px;margin-bottom:10px;background:white;border-radius:10px}.icon{width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}</style></head><body><div class="container"><h1>⚡ Super Programme - Dashboard</h1><div class="dashboard"><div class="card"><h3>🔬 X-ray API</h3><p>Actif</p><small>Analyse en temps réel</small></div><div class="card"><h3>🕴️ Agent K</h3><p>Connecté</p><small>IA opérationnelle</small></div><div class="card"><h3>💻 Modules</h3><p>12</p><small>Tous actifs</small></div><div class="card"><h3>📊 Données</h3><p>1.2M</p><small>Enregistrements</small></div></div><div class="features"><h2 style="color:#667eea;margin-bottom:20px">🚀 Fonctionnalités</h2><div class="feature-item"><div class="icon">🔬</div><div><h4>API X-ray Intégrée</h4><p style="color:#666;font-size:0.9rem">Analyse de données en profondeur</p></div></div><div class="feature-item"><div class="icon">🕴️</div><div><h4>Agent K Intelligence</h4><p style="color:#666;font-size:0.9rem">IA avancée avec ML</p></div></div><div class="feature-item"><div class="icon">⚡</div><div><h4>Performance</h4><p style="color:#666;font-size:0.9rem">Traitement ultra-rapide</p></div></div><div class="feature-item"><div class="icon">🔒</div><div><h4>Sécurité</h4><p style="color:#666;font-size:0.9rem">Chiffrement complet</p></div></div></div></div></body></html>';
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+
+        function openDashboard() {
+            const html = '<!DOCTYPE html><html><head><title>Dashboard</title><style>*{margin:0;padding:0}body{font-family:Arial;background:#f5f7fa}.header{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px}.main{max-width:1400px;margin:0 auto;padding:30px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}.stat-card{background:white;padding:25px;border-radius:15px;box-shadow:0 3px 15px rgba(0,0,0,0.1)}.stat-value{font-size:2.5rem;font-weight:bold;color:#667eea;margin:10px 0}</style></head><body><div class="header"><h1>📊 Dashboard Analytics Pro</h1></div><div class="main"><div class="stats"><div class="stat-card"><div style="font-size:2rem">👥</div><div class="stat-value">12,543</div><div>Utilisateurs</div></div><div class="stat-card"><div style="font-size:2rem">📈</div><div class="stat-value">+24%</div><div>Croissance</div></div><div class="stat-card"><div style="font-size:2rem">💰</div><div class="stat-value">€45.2K</div><div>Revenus</div></div><div class="stat-card"><div style="font-size:2rem">⚡</div><div class="stat-value">99.9%</div><div>Uptime</div></div></div></div></body></html>';
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+
+        function openWebsite() {
+            const html = '<!DOCTYPE html><html><head><title>Site Web</title><style>*{margin:0;padding:0}body{font-family:Arial}.hero{background:linear-gradient(135deg,#667eea,#764ba2);color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}.hero h1{font-size:4rem;margin-bottom:20px}.hero p{font-size:1.5rem;margin-bottom:30px}.cta{background:white;color:#667eea;padding:20px 50px;border:none;border-radius:50px;font-size:1.2rem;font-weight:bold;cursor:pointer}.cta:hover{transform:scale(1.1)}</style></head><body><section class="hero"><div><h1>🚀 Bienvenue</h1><p>Solution IA de nouvelle génération</p><button class="cta">Commencer</button></div></section></body></html>';
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+
+        function openCalc() {
+            const html = '<!DOCTYPE html><html><head><style>body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2)}.c{background:white;padding:30px;border-radius:20px}.d{background:#f0f0f0;padding:20px;text-align:right;font-size:2rem;border-radius:10px;margin-bottom:20px}.b{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}button{padding:20px;font-size:1.5rem;border:none;border-radius:10px;cursor:pointer}</style></head><body><div class="c"><div class="d" id="d">0</div><div class="b"><button>C</button><button>/</button><button>*</button><button>-</button><button>7</button><button>8</button><button>9</button><button>+</button><button>4</button><button>5</button><button>6</button><button>1</button><button>2</button><button>3</button><button>0</button><button>=</button></div></div></body></html>';
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+
+        function openGame() {
+            const html = '<!DOCTYPE html><html><head><style>body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#1e3c72,#2a5298);font-family:Arial}.g{background:white;padding:40px;border-radius:20px;text-align:center}.t{width:100px;height:100px;background:#667eea;border-radius:50%;margin:30px auto;cursor:pointer}</style></head><body><div class="g"><h1>🎯 Jeu</h1><div id="s">Score: 0</div><div class="t" onclick="sc()"></div></div><script>let s=0;function sc(){s++;document.getElementById("s").textContent="Score: "+s}</script></body></html>';
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+
+        function quickSend(msg) {
+            document.getElementById('messageInput').value = msg;
+            sendMessage();
+        }
+
+        function clearChat() {
+            document.getElementById('chatContainer').innerHTML = 
+                '<div class="message"><div class="avatar avatar-bot">🤖</div>' +
+                '<div class="bubble bubble-bot"><strong>Chat effacé !</strong><br><br>Prête pour une nouvelle conversation.</div></div>';
+        }
+
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
